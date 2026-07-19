@@ -270,6 +270,28 @@ nav {
 .institute-other { margin-top: 0.8rem; display: none; }
 .institute-other.show { display: block; }
 
+.referral-row { display: flex; gap: 0.5rem; }
+.referral-row input { flex: 1; }
+.apply-btn {
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 0 1rem; border: 1px solid var(--paper-stain); background: var(--paper); color: var(--ink-faded);
+  border-radius: 2px; white-space: nowrap; transition: all 0.2s;
+}
+.apply-btn:hover:not(:disabled) { border-color: var(--red-tape); color: var(--red-tape); }
+.apply-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.price-summary { background: var(--paper-dark); border: 1px solid var(--paper-stain); border-radius: 3px; padding: 0.9rem 1.1rem; margin: 0 0 1.3rem; }
+.ps-row { display: flex; justify-content: space-between; align-items: center; font-family: var(--typewriter); font-size: 0.85rem; color: var(--ink-faded); padding: 0.3rem 0; }
+.ps-discount { color: var(--stamp-green); }
+.ps-discount span:first-child { display: flex; align-items: center; gap: 0.5rem; }
+.ps-remove-btn {
+  background: none; border: 1px solid var(--red-tape); color: var(--red-tape); border-radius: 50%;
+  width: 16px; height: 16px; font-size: 0.6rem; line-height: 1; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; padding: 0;
+}
+.ps-remove-btn:hover { background: var(--red-tape); color: #fff; }
+.ps-payable { border-top: 1px dashed var(--paper-stain); margin-top: 0.3rem; padding-top: 0.55rem; font-family: var(--mono); font-weight: 700; font-size: 0.95rem; color: var(--ink); }
+
 .turnstile-wrap { margin: 1.3rem 0; min-height: 65px; }
 
 .submit-row { margin-top: 1.6rem; }
@@ -369,9 +391,6 @@ footer { background: var(--paper-dark); border-top: 2px solid var(--paper-stain)
       <span class="nav-stamp">Case File · EST. 2026</span>
     </div>
   </a>
-  <div class="nav-hamburger" onclick="toggleMenu()" id="hamburger">
-    <span></span><span></span><span></span>
-  </div>
 </nav>
 
 <!-- ═══════════ DOCKET HERO ═══════════ -->
@@ -470,7 +489,7 @@ footer { background: var(--paper-dark); border-top: 2px solid var(--paper-stain)
     <div class="intake-card">
       <div class="intake-header">
         <span>Form SSE-WKS-01</span>
-        <span id="intake-seats-tag">280 Seats</span>
+        <span id="intake-seats-tag">290 Seats</span>
       </div>
 
       <div class="intake-body">
@@ -478,7 +497,7 @@ footer { background: var(--paper-dark); border-top: 2px solid var(--paper-stain)
         <!-- Sold out / closed state -->
         <div class="state-panel" id="state-closed" style="display:none">
           <div class="state-stamp">Sold Out</div>
-          <p>All 280 seats for this workshop have been claimed. Follow our <a href="https://www.instagram.com/skillsphere.edu_official/" style="color:var(--red-tape);font-weight:700">Instagram</a> or <a href="https://chat.whatsapp.com/GQt3BvX99fr4tcHJg0Is1S" style="color:var(--red-tape);font-weight:700">WhatsApp group</a> for the next batch.</p>
+          <p>All 290 seats for this workshop have been claimed. Follow our <a href="https://www.instagram.com/skillsphere.edu_official/" style="color:var(--red-tape);font-weight:700">Instagram</a> or <a href="https://chat.whatsapp.com/GQt3BvX99fr4tcHJg0Is1S" style="color:var(--red-tape);font-weight:700">WhatsApp group</a> for the next batch.</p>
         </div>
 
         <!-- Registration form -->
@@ -529,8 +548,20 @@ footer { background: var(--paper-dark); border-top: 2px solid var(--paper-stain)
 
           <div class="field">
             <label for="f-referral">Referral / Discount Code (optional)</label>
-            <input type="text" id="f-referral" name="referral" autocomplete="off" style="text-transform:uppercase">
+            <div class="referral-row">
+              <input type="text" id="f-referral" name="referral" autocomplete="off" style="text-transform:uppercase">
+              <button type="button" class="apply-btn" id="apply-code-btn">Apply</button>
+            </div>
             <div class="field-error" id="err-referral"></div>
+          </div>
+
+          <div class="price-summary" id="price-summary">
+            <div class="ps-row"><span>Total Price</span><span id="ps-total">₹--</span></div>
+            <div class="ps-row ps-discount" id="ps-discount-row" style="display:none">
+              <span>Discount (<span id="ps-code-label"></span>)<button type="button" class="ps-remove-btn" id="ps-remove-btn" title="Remove code">✕</button></span>
+              <span id="ps-discount-amt">−₹0</span>
+            </div>
+            <div class="ps-row ps-payable"><span>Payable Price</span><span id="ps-payable">₹--</span></div>
           </div>
 
           <div class="turnstile-wrap">
@@ -590,13 +621,13 @@ footer { background: var(--paper-dark); border-top: 2px solid var(--paper-stain)
   <div class="footer-inner">
     <div class="footer-brand">
       <span class="footer-brand-text">Skill<em>Sphere</em> Edu</span>
-      <p style="margin-bottom:.5rem;font-family:var(--mono);font-size:.68rem;color:var(--ink-muted);letter-spacing:1px"></p>
-      <p>A student-led upskilling platform delivering webinars, workshops and verified credentials for the next generation of professionals.</p>
+      <p style="margin-bottom:.5rem;font-family:var(--mono);font-size:.68rem;color:var(--ink-muted);letter-spacing:1px">GSTIN: —</p>
+      <p>A student-led upskilling platform delivering certified courses and verified credentials for the next generation of professionals.</p>
       <div class="footer-socials">
         <a href="https://www.linkedin.com/company/skillsphere001" class="social-chipft">LinkedIn</a>
         <a href="https://chat.whatsapp.com/DtXsfi7IG1h0RRkjD0pg5p" class="social-chipft">WhatsApp</a>
         <a href="https://www.instagram.com/skillsphere.edu_official/" class="social-chipft">Instagram</a>
-        <a href="mailto:skillsphere.edu.work@gmail.com" class="social-chipft">Mail</a>
+        <a href="mailto:skillsphere.work@gmail.com" class="social-chipft">Mail</a>
       </div>
     </div>
     <div class="footer-col">
@@ -617,6 +648,7 @@ footer { background: var(--paper-dark); border-top: 2px solid var(--paper-stain)
 </footer>
 
 <script>
+/* ⚠️ UPDATE THIS before deploying — your deployed Worker URL */
 const API_BASE = "https://skillsphere-workshop-api.skillsphere-work.workers.dev";
 
 /* Mobile menu */
@@ -642,6 +674,73 @@ document.querySelectorAll('input[name="institute"]').forEach(radio => {
 let turnstileToken = null;
 function onTurnstileSuccess(token) { turnstileToken = token; }
 
+/* Price summary state — appliedCode/appliedDiscountPaise are only ever set
+   via a successful /api/validate-code response, never from raw input, so the
+   summary shown always matches something the server actually confirmed. */
+let currentPricePaise = null;
+let appliedCode = null;
+let appliedDiscountPaise = 0;
+
+function updatePriceSummary() {
+  if (currentPricePaise == null) return;
+  const rupees = (paise) => `₹${Math.round(paise / 100)}`;
+
+  document.getElementById('ps-total').textContent = rupees(currentPricePaise);
+
+  const discountRow = document.getElementById('ps-discount-row');
+  if (appliedCode) {
+    discountRow.style.display = 'flex';
+    document.getElementById('ps-code-label').textContent = appliedCode;
+    document.getElementById('ps-discount-amt').textContent = '−' + rupees(appliedDiscountPaise);
+  } else {
+    discountRow.style.display = 'none';
+  }
+
+  const payable = Math.max(100, currentPricePaise - appliedDiscountPaise);
+  document.getElementById('ps-payable').textContent = rupees(payable);
+}
+
+document.getElementById('apply-code-btn').addEventListener('click', async () => {
+  const input = document.getElementById('f-referral');
+  const code = input.value.trim().toUpperCase();
+  const btn = document.getElementById('apply-code-btn');
+
+  document.getElementById('err-referral').classList.remove('show');
+  if (!code) return fieldError('referral', 'Enter a code first.');
+
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+  try {
+    const res = await fetch(`${API_BASE}/api/validate-code?code=${encodeURIComponent(code)}`);
+    const data = await res.json();
+    if (data.valid) {
+      appliedCode = data.code;
+      appliedDiscountPaise = data.discountPaise;
+      input.value = data.code;
+      input.disabled = true;
+      btn.style.display = 'none';
+      updatePriceSummary();
+    } else {
+      fieldError('referral', 'Invalid or expired referral code.');
+    }
+  } catch (err) {
+    fieldError('referral', 'Could not check that code — please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Apply';
+  }
+});
+
+document.getElementById('ps-remove-btn').addEventListener('click', () => {
+  appliedCode = null;
+  appliedDiscountPaise = 0;
+  const input = document.getElementById('f-referral');
+  input.value = '';
+  input.disabled = false;
+  document.getElementById('apply-code-btn').style.display = '';
+  updatePriceSummary();
+});
+
 /* ── Load live price / seats / status ── */
 async function loadMeta() {
   try {
@@ -662,6 +761,9 @@ function renderMeta(data) {
   document.getElementById('tier-label').textContent = data.currentTierLabel + ' Price';
   document.getElementById('price-amount').textContent = rupees(data.currentPricePaise);
   document.getElementById('intake-seats-tag').textContent = `${data.seatCap} Seats`;
+
+  currentPricePaise = data.currentPricePaise;
+  updatePriceSummary();
 
   if (data.nextTier) {
     const startsIst = new Date(data.nextTier.startsAt).toLocaleString('en-IN', {
@@ -704,7 +806,7 @@ document.getElementById('reg-form').addEventListener('submit', async function (e
     phone: document.getElementById('f-phone').value.trim(),
     institute: institute ? institute.value : '',
     instituteOther: document.getElementById('f-institute-other').value.trim(),
-    referralCode: document.getElementById('f-referral').value.trim(),
+    referralCode: appliedCode || '',
     turnstileToken,
   };
 
